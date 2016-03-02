@@ -4,16 +4,29 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.j1tth4.live500px.R;
+import com.example.j1tth4.live500px.manager.PhotoListManager;
 import com.inthecheesefactory.thecheeselibrary.view.BaseCustomViewGroup;
 import com.inthecheesefactory.thecheeselibrary.view.state.BundleSavedState;
+
+import jp.wasabeef.glide.transformations.BlurTransformation;
+import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 
 /**
  * Created by nuuneoi on 11/16/2014.
  */
 public class PhotoListItem extends BaseCustomViewGroup {
+
+    ImageView ivImg;
+    TextView tvName;
+    TextView tvDescription;
 
     public PhotoListItem(Context context) {
         super(context);
@@ -49,6 +62,9 @@ public class PhotoListItem extends BaseCustomViewGroup {
 
     private void initInstances() {
         // findViewById here
+        ivImg = (ImageView) findViewById(R.id.ivImg);
+        tvName = (TextView) findViewById(R.id.tvName);
+        tvDescription = (TextView) findViewById(R.id.tvDescription);
     }
 
     private void initWithAttrs(AttributeSet attrs, int defStyleAttr, int defStyleRes) {
@@ -97,5 +113,25 @@ public class PhotoListItem extends BaseCustomViewGroup {
         );
         super.onMeasure(widthMeasureSpec, newHeightMeasureSpec);
         setMeasuredDimension(width, height);
+    }
+
+    public void setNameText(String name){
+        tvName.setText(name);
+    }
+
+    public void setDescription(String description){
+        tvDescription.setText(description);
+    }
+
+    public void setImageUrl(String url){
+        Glide.with(getContext())
+                .load(url)
+                .centerCrop()
+                .crossFade()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .placeholder(R.drawable.loading)
+                //.bitmapTransform(new RoundedCornersTransformation(getContext(), 16, 16))
+                //.bitmapTransform(new BlurTransformation(getContext()))
+                .into(ivImg);
     }
 }

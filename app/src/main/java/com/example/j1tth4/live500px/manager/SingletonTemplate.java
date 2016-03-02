@@ -1,8 +1,6 @@
-package com.example.j1tth4.live500px;
+package com.example.j1tth4.live500px.manager;
 
 import android.content.Context;
-
-import com.example.j1tth4.live500px.manager.Contextor;
 
 /**
  * Created by nuuneoi on 11/16/2014.
