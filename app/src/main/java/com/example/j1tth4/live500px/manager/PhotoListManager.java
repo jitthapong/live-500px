@@ -1,6 +1,7 @@
 package com.example.j1tth4.live500px.manager;
 
 import android.content.Context;
+import android.os.Bundle;
 
 import com.example.j1tth4.live500px.dao.PhotoItemCollectionDao;
 import com.example.j1tth4.live500px.dao.PhotoItemDao;
@@ -22,6 +23,14 @@ public class PhotoListManager {
         this.dao = dao;
     }
 
+    public void insertDaoAtBottomPosition(PhotoItemCollectionDao dao){
+        if(dao == null)
+            dao = new PhotoItemCollectionDao();
+        if(dao.getData() == null)
+            dao.setData(new ArrayList<PhotoItemDao>());
+        this.dao.getData().addAll(this.dao.getData().size(), dao.getData());
+    }
+
     public void insertDaoAtTopPosition(PhotoItemCollectionDao dao){
         if(dao == null)
             dao = new PhotoItemCollectionDao();
@@ -32,6 +41,19 @@ public class PhotoListManager {
 
     public PhotoItemCollectionDao getDao() {
         return dao;
+    }
+
+    public int getMinimumId(){
+        if(dao == null)
+            return 0;
+        if(dao.getData() == null)
+            return 0;
+        if(dao.getData().size() == 0)
+            return 0;
+        int minId = dao.getData().get(0).getId();
+        for (int i = 1; i < dao.getData().size(); i++)
+            minId = Math.min(minId, dao.getData().get(i).getId());
+        return minId;
     }
 
     public int getMaximumId(){
@@ -53,5 +75,15 @@ public class PhotoListManager {
         if(dao.getData() == null)
             return 0;
         return dao.getData().size();
+    }
+
+    public Bundle onSaveInstanceState(){
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("dao", dao);
+        return bundle;
+    }
+
+    public void onRestoreInstanceState(Bundle savedInstanceState){
+        dao = savedInstanceState.getParcelable("dao");
     }
 }

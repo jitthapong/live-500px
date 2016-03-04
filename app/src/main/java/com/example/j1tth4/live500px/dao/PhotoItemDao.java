@@ -1,5 +1,8 @@
 package com.example.j1tth4.live500px.dao;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -9,7 +12,7 @@ import java.util.List;
 /**
  * Created by toy_o on 2/3/2559.
  */
-public class PhotoItemDao {
+public class PhotoItemDao implements Parcelable {
 
     @SerializedName("id")  private Integer id;
     @SerializedName("link") private String link;
@@ -146,4 +149,60 @@ public class PhotoItemDao {
     public void setAperture(String aperture) {
         this.aperture = aperture;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(this.id);
+        dest.writeString(this.link);
+        dest.writeString(this.imageUrl);
+        dest.writeString(this.caption);
+        dest.writeValue(this.userId);
+        dest.writeString(this.username);
+        dest.writeString(this.profilePicture);
+        dest.writeStringList(this.tags);
+        dest.writeLong(createdTime != null ? createdTime.getTime() : -1);
+        dest.writeString(this.camera);
+        dest.writeString(this.lens);
+        dest.writeString(this.focalLength);
+        dest.writeString(this.iso);
+        dest.writeString(this.shutterSpeed);
+        dest.writeString(this.aperture);
+    }
+
+    public PhotoItemDao() {
+    }
+
+    protected PhotoItemDao(Parcel in) {
+        this.id = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.link = in.readString();
+        this.imageUrl = in.readString();
+        this.caption = in.readString();
+        this.userId = (Integer) in.readValue(Integer.class.getClassLoader());
+        this.username = in.readString();
+        this.profilePicture = in.readString();
+        this.tags = in.createStringArrayList();
+        long tmpCreatedTime = in.readLong();
+        this.createdTime = tmpCreatedTime == -1 ? null : new Date(tmpCreatedTime);
+        this.camera = in.readString();
+        this.lens = in.readString();
+        this.focalLength = in.readString();
+        this.iso = in.readString();
+        this.shutterSpeed = in.readString();
+        this.aperture = in.readString();
+    }
+
+    public static final Parcelable.Creator<PhotoItemDao> CREATOR = new Parcelable.Creator<PhotoItemDao>() {
+        public PhotoItemDao createFromParcel(Parcel source) {
+            return new PhotoItemDao(source);
+        }
+
+        public PhotoItemDao[] newArray(int size) {
+            return new PhotoItemDao[size];
+        }
+    };
 }
